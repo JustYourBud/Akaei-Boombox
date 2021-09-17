@@ -19,7 +19,7 @@ module.exports = {
 
     if (!interaction.member.voice.channelId)
       return await interaction.reply({
-        content: "You are not in a voice channel!",
+        content: "You are not in a voice channel, silly!",
         ephemeral: true,
       });
     if (
@@ -28,7 +28,7 @@ module.exports = {
         interaction.guild.me.voice.channelId
     )
       return await interaction.reply({
-        content: "You are not in my voice channel!",
+        content: "We need to be in the same voice channel!",
         ephemeral: true,
       });
     const query = interaction.options.get("query").value;
@@ -45,7 +45,7 @@ module.exports = {
     } catch {
       queue.destroy();
       return await interaction.reply({
-        content: "Could not join your voice channel!",
+        content: "I can't seem to be able to join that voice channel!",
         ephemeral: true,
       });
     }

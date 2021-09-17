@@ -9,6 +9,6 @@ module.exports = {
     const voiceChannel = interaction.member.voice.channel;
     const connection = getVoiceConnection(voiceChannel.guild.id);
     connection.destroy();
-    await interaction.reply("Leaving channel!");
+    await interaction.reply("I enjoyed listening with you!");
   },
 };

@@ -9,6 +9,7 @@
   "author": "Louie Chudziak",
   "license": "ISC",
   "dependencies": {
+    "@discord-player/extractor": "^3.0.2",
     "@discordjs/builders": "^0.6.0",
     "@discordjs/opus": "^0.5.3",
     "@discordjs/rest": "^0.1.0-canary.0",

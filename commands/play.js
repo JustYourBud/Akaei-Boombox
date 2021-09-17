@@ -1,12 +1,5 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  AudioPlayerStatus,
-} = require("@discordjs/voice");
-const ytdl = require("ytdl-core");
-const ytSearch = require("yt-search");
+const { Player } = require("discord-player");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,73 +7,64 @@ module.exports = {
     .setDescription("Plays a song of your choosing in a voice channel")
     .addStringOption((option) =>
       option
-        .setName("input")
+        .setName("query")
         .setDescription("A search input or a link")
         .setRequired(true)
     ),
-  async execute(interaction) {
-    const input = interaction.options.getString("input");
+  async execute(interaction, client) {
+    const player = new Player(client);
+    player.on("trackStart", (queue, track) =>
+      queue.metadata.channel.send(`🎶💜 | Now playing **${track.title}**!`)
+    );
 
-    const voiceChannel = interaction.member.voice.channel;
-    // console.log(voiceChannel);
-
-    if (!voiceChannel) {
+    if (!interaction.member.voice.channelId)
       return await interaction.reply({
-        content: "You aren't in a voice channel, silly!",
+        content: "You are not in a voice channel, silly!",
         ephemeral: true,
       });
-    }
-
-    const permissions = voiceChannel.permissionsFor(interaction.client.user);
-
-    if (!permissions.has("CONNECT")) {
+    if (
+      interaction.guild.me.voice.channelId &&
+      interaction.member.voice.channelId !==
+        interaction.guild.me.voice.channelId
+    )
       return await interaction.reply({
-        content: "I can't join the voice channel you're in!",
+        content: "We need to be in the same voice channel!",
         ephemeral: true,
       });
-    }
-
-    if (!permissions.has("SPEAK")) {
-      return await interaction.reply({
-        content: "I can't speak in the voice channel you're in!",
-        ephemeral: true,
-      });
-    }
-
-    const connection = joinVoiceChannel({
-      channelId: voiceChannel.id,
-      guildId: voiceChannel.guild.id,
-      adapterCreator: voiceChannel.guild.voiceAdapterCreator,
+    const query = interaction.options.get("query").value;
+    const queue = player.createQueue(interaction.guild, {
+      metadata: {
+        channel: interaction.channel,
+      },
     });
 
-    const videoFinder = async (query) => {
-      const videoResult = await ytSearch(query);
-      return videoResult.videos.length > 1 ? videoResult.videos[0] : null;
-    };
-
-    const video = await videoFinder(input);
-    if (video) {
-      const stream = ytdl(video.url, { filter: "audioonly" });
-
-      const player = createAudioPlayer();
-      const resource = createAudioResource(stream);
-
-      player.play(resource);
-      connection.subscribe(player);
-
-      player.on(AudioPlayerStatus.Idle, () => {
-        player.stop();
-        connection.destroy();
-      });
-
-      return await interaction.reply(
-        `:blue_heart: Now playing ***${video.title}***`
-      );
-    } else {
+    // verify vc connection
+    try {
+      if (!queue.connection)
+        await queue.connect(interaction.member.voice.channel);
+    } catch {
+      queue.destroy();
       return await interaction.reply({
-        content: "I'm sorry, I couldn't find any results for your search!",
+        content: "I can't seem to be able to join that voice channel!",
         ephemeral: true,
       });
     }
+
+    await interaction.deferReply();
+    const track = await player
+      .search(query, {
+        requestedBy: interaction.user,
+      })
+      .then((x) => x.tracks[0]);
+    if (!track)
+      return await interaction.followUp({
+        content: `❌ | Track **${query}** not found!`,
+      });
+
+    queue.play(track);
+
+    return await interaction.followUp({
+      content: `⏱️ | Loading track **${track.title}**!`,
+    });
   },
 };

@@ -9,6 +9,9 @@
   },
   "author": "Louie Chudziak",
   "license": "ISC",
+  "engines": {
+    "node": "16.6"
+  },
   "dependencies": {
     "@discord-player/extractor": "^3.0.2",
     "@discordjs/builders": "^0.6.0",

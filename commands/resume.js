@@ -10,12 +10,12 @@ module.exports = {
     await interaction.deferReply();
 
     const queue = player.getQueue(interaction.guild.id);
-    let track = queue.current;
+    const track = queue.current;
 
     if (!queue || !queue.playing) {
       return await errorSend(
         interaction,
-        "I can't pause nothing!",
+        "I can't resume nothing!",
         "You have no music playing right now!"
       );
     }

@@ -27,6 +27,14 @@ module.exports = {
       );
     }
 
+    if (!interaction.guild.me.voice.channelId) {
+      return await errorSend(
+        interaction,
+        "How rude!",
+        "I can't leave the VC if I haven't even joined it!"
+      );
+    }
+
     const voiceChannel = interaction.member.voice.channel;
     const connection = getVoiceConnection(voiceChannel.guild.id);
     connection.destroy();

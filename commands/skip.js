@@ -9,7 +9,6 @@ module.exports = {
     await interaction.deferReply();
 
     const queue = player.getQueue(interaction.guild.id);
-    const track = queue.current;
 
     if (!queue || !queue.playing) {
       return await errorSend(
@@ -18,6 +17,8 @@ module.exports = {
         "You have no music playing right now!"
       );
     }
+
+    const track = queue.current;
 
     queue.skip();
     return await successSend(

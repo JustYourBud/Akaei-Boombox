@@ -29,7 +29,9 @@ module.exports = {
 
     let nowPlayingEmbed = new MessageEmbed()
       .setTitle("Now Playing")
-      .setDescription(`<:pageright:819655631501656125> ${track.title}`)
+      .setDescription(
+        `<:pageright:819655631501656125> ${track.title} ([View](${track.url}))`
+      )
       .setThumbnail(track.thumbnail)
       .setColor("#73a9ff")
       .addField("\u200b", bar);

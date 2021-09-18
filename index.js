@@ -23,7 +23,10 @@ player.on("trackStart", (queue, track) => {
   let playEmbed = new MessageEmbed()
     .setThumbnail(track.thumbnail)
     .setColor("#73a9ff")
-    .addField(`<:pageright:819655631501656125> Now playing`, `${track.title}`)
+    .addField(
+      `<:pageright:819655631501656125> Now playing`,
+      `${track.title}\n[View song](${track.url})`
+    )
     .setFooter(`Requested by ${track.requestedBy.username}`);
 
   queue.metadata.channel.send({

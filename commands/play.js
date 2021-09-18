@@ -72,7 +72,6 @@ module.exports = {
     }
 
     if (!queue.playing) await queue.play();
-    console.log(searchResult.tracks[0].title);
     return await loadSend(interaction, loadedName);
   },
 };

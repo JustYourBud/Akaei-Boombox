@@ -35,7 +35,7 @@ player.on("trackStart", (queue, track) => {
 });
 
 client.once("ready", () => {
-  console.log("Ready!");
+  console.log("Time to listen!");
 });
 
 client.on("interactionCreate", async (interaction) => {

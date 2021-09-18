@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { Client, Collection, Intents, MessageEmbed } = require("discord.js");
-const { token } = require("./config.json");
+// const { token } = require("./config.json");
 const { Player } = require("discord-player");
 const { errorSend } = require("./templates/embeds.js");
 
@@ -57,4 +57,4 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-client.login(token);
+client.login(process.env.AB_TOKEN);

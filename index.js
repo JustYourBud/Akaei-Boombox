@@ -34,6 +34,19 @@ player.on("trackStart", (queue, track) => {
   });
 });
 
+player.on("error", (queue) => {
+  let errorEmbed = new MessageEmbed()
+    .setColor("#FF7A90")
+    .addField(
+      `<:no:785336733696262154> Oops!`,
+      `Looks like something went wrong! You don't have to worry about it though. You aren't the developer.`
+    );
+
+  queue.metadata.channel.send({
+    embeds: [errorEmbed],
+  });
+});
+
 client.once("ready", () => {
   console.log("Time to listen!");
 });

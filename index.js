@@ -1,8 +1,8 @@
 const fs = require("fs");
-const { Client, Collection, Intents } = require("discord.js");
+const { Client, Collection, Intents, MessageEmbed } = require("discord.js");
 const { token } = require("./config.json");
 const { Player } = require("discord-player");
-const { errorSend } = require("./templates/error.js");
+const { errorSend } = require("./templates/embeds.js");
 
 const client = new Client({
   intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_VOICE_STATES],
@@ -19,9 +19,17 @@ for (const file of commandFiles) {
 }
 
 const player = new Player(client);
-player.on("trackStart", (queue, track) =>
-  queue.metadata.channel.send(`🎶💜 | Now playing **${track.title}**!`)
-);
+player.on("trackStart", (queue, track) => {
+  let playEmbed = new MessageEmbed()
+    .setThumbnail(track.thumbnail)
+    .setColor("#73a9ff")
+    .addField(`<:pageright:819655631501656125> Now playing`, `${track.title}`)
+    .setFooter(`Requested by ${track.requestedBy.username}`);
+
+  queue.metadata.channel.send({
+    embeds: [playEmbed],
+  });
+});
 
 client.once("ready", () => {
   console.log("Ready!");

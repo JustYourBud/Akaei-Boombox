@@ -1,12 +1,32 @@
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const { getVoiceConnection } = require("@discordjs/voice");
-const { successSend } = require("../templates/embeds.js");
+const { errorSend, successSend } = require("../templates/embeds.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("leave")
     .setDescription("Removes me from the voice channel"),
   async execute(interaction) {
+    if (!interaction.member.voice.channelId) {
+      return await errorSend(
+        interaction,
+        "Can you even hear me?",
+        "You need to be in a voice channel to use this command, silly!"
+      );
+    }
+
+    if (
+      interaction.guild.me.voice.channelId &&
+      interaction.member.voice.channelId !==
+        interaction.guild.me.voice.channelId
+    ) {
+      return await errorSend(
+        interaction,
+        "Don't be shy!",
+        "Looks like we'll need to be in the same voice channel for this to work."
+      );
+    }
+
     const voiceChannel = interaction.member.voice.channel;
     const connection = getVoiceConnection(voiceChannel.guild.id);
     connection.destroy();

@@ -1,5 +1,7 @@
 # Akaei Boombox
 
+**This bot does not work and the repository has been archived as I never plan on coming back to fix it! If you really want to you can fork it but I don't see why you would.**
+
 This is a Discord music bot made for my own personal use only. It is not public and therefore there is no invite link for it. Sorry!
 
 You may host it yourself if you'd like, though please do not use the Akaei art and name. Thanks!
